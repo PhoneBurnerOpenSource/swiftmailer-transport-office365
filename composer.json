@@ -1,0 +1,32 @@
+{
+    "name": "phoneburneropensource/swiftmailer-transport-office365",
+    "description": "SwiftMailer Office365 tests/Swiftmailer/Transport",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["mail","mailer","email","swiftmailer","transport","office365"],
+    "authors": [
+        {
+            "name": "John Congdon",
+            "email": "jcongdon@phoneburner.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "PhoneburnerOpenSource\\Office365Swiftmailer\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhoneburnerOpenSource\\Office365Swiftmailer\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "php": ">=7.2.0",
+        "swiftmailer/swiftmailer": "^6.0",
+        "microsoft/microsoft-graph": "^1.5",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
+    }
+}
