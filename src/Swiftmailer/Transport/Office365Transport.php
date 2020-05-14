@@ -142,20 +142,23 @@ class Office365Transport implements Swift_Transport
         $attachments = [];
         foreach ($children as $child) {
             $headers = $child->getHeaders();
-            $headers->get('Content-Disposition');
+            $content = $headers->get('Content-Disposition');
+            if ($content) {
+                $attachment = new FileAttachment();
+                $attachment->setName($content->getParameter('filename'));
+                $attachment->setContentType($child->getBodyContentType());
+                $attachment->setContentBytes($child->getBody());
+                $attachment->setODataType("#microsoft.graph.fileAttachment");
 
-            $attachment = new FileAttachment();
-            $attachment->setName($headers->get('Content-Disposition')->getParameter('filename'));
-            $attachment->setContentType($child->getBodyContentType());
-            $attachment->setContentBytes($child->getBody());
-
-            $attachments[] = $attachment;
+                $attachments[] = $attachment;
+            }
         }
 
         if ($attachments) {
             $email->setAttachments($attachments);
         }
 
+        $email->setBody($body);
         $body = ['message' => $email];
         try {
             $response = $this->client->createRequest('POST', '/me/sendmail')
@@ -170,7 +173,7 @@ class Office365Transport implements Swift_Transport
         }
 
 
-        if (202 === $response->statusCode()) {
+        if (202 === $response->getStatus()) {
             if ($evt) {
                 $evt->setResult(Swift_Events_SendEvent::RESULT_SUCCESS);
                 $evt->setFailedRecipients($failedRecipients);
@@ -194,7 +197,7 @@ class Office365Transport implements Swift_Transport
     {
         if ($evt = $this->eventDispatcher->createTransportExceptionEvent($this, $e)) {
             $this->eventDispatcher->dispatchEvent($evt, 'exceptionThrown');
-            if (!$evt->bubbleCancelled()) {
+            if ( ! $evt->bubbleCancelled()) {
                 throw $e;
             }
         } else {
