@@ -152,6 +152,10 @@ class Office365Transport implements Swift_Transport
 
                 $attachments[] = $attachment;
             }
+            if ($content_type && ! $disposition) {
+                $body->setContentType(new BodyType(BodyType::HTML));
+                $body->setContent($child->getBody());
+            }
         }
 
         if ($attachments) {
