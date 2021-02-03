@@ -148,7 +148,7 @@ class Office365Transport implements Swift_Transport
                 $attachment = new FileAttachment();
                 $attachment->setName($disposition->getParameter('filename'));
                 $attachment->setContentType($child->getBodyContentType());
-                $attachment->setContentBytes($child->getBody());
+                $attachment->setContentBytes(base64_encode($child->getBody()));
                 $attachment->setODataType("#microsoft.graph.fileAttachment");
 
                 $attachments[] = $attachment;
